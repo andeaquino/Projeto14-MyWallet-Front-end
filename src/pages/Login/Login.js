@@ -24,7 +24,7 @@ export default function Login() {
                 setLoading(false);
                 setEmail("");
                 setPassword("");
-                history.push('/registros');
+                history.push('/conta');
             })
             .catch(() => {
                 setLoading(false);
@@ -62,7 +62,9 @@ export default function Login() {
 }
 
 const LoginContainer = styled.div`
-    padding: 25vh 25px 0;
+    height: 312px;
+    margin-top: calc(50vh - 156px);
+    padding: 0 25px;
 
     h1 {
         font-size: 32px;
@@ -70,6 +72,7 @@ const LoginContainer = styled.div`
         font-family: 'Saira Stencil One', cursive;
         margin-bottom: 30px;
         text-align: center;
+        
     }
     
     input {

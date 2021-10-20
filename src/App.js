@@ -1,6 +1,7 @@
 import GlobalStyle from "./shared/GlobalStyle";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Login from "./pages/Login/Login";
+import Register from "./pages/Register/Register";
 
 function App() {
   return (
@@ -11,9 +12,9 @@ function App() {
           <Login />
         </Route>
         <Route exact path='/cadastro'>
-
+          <Register />
         </Route>
-        <Route exact path='/registros'>
+        <Route exact path='/conta'>
 
         </Route>
         <Route exact path='/nova-entrada'>
