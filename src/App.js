@@ -2,6 +2,7 @@ import GlobalStyle from "./shared/GlobalStyle";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
+import Account from "./pages/Account/Account";
 import AddIncome from "./pages/AddIncome/AddIncome";
 import AddExpense from "./pages/AddExpense/AddExpense";
 
@@ -17,7 +18,7 @@ function App() {
           <Register />
         </Route>
         <Route exact path='/conta'>
-
+          <Account />
         </Route>
         <Route exact path='/nova-entrada'>
           <AddIncome />
