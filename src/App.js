@@ -3,6 +3,7 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import AddIncome from "./pages/AddIncome/AddIncome";
+import AddExpense from "./pages/AddExpense/AddExpense";
 
 function App() {
   return (
@@ -22,7 +23,7 @@ function App() {
           <AddIncome />
         </Route>
         <Route exact path='/nova-saida'>
-
+          <AddExpense />
         </Route>
       </Switch>
     </BrowserRouter>
