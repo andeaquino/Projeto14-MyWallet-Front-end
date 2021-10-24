@@ -1,9 +1,10 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import { addEntry } from "../../services/API";
 import Loader from "react-loader-spinner";
 import CurrencyInput from 'react-currency-input-field';
+import { IoChevronBackOutline } from 'react-icons/io5';
 
 export default function AddIncome() {
     const [value, setValue] = useState("");
@@ -11,20 +12,25 @@ export default function AddIncome() {
     const [loading, setLoading] = useState(false);
     const history = useHistory();
 
+    const token = JSON.parse(localStorage.getItem("user"))?.token;
+    if (!token) {
+        history.push("/");
+    }
+
     const addIncome = (e) => {
         e.preventDefault();
         setLoading(true);
 
         const body = {
-            value: value.toFixed(2),
+            value: Number(value),
             description
         }
 
-        addEntry(body)
+        addEntry({body, token})
             .then(() => {
-                setLoading(false);
                 setValue("");
                 setDescription("");
+                setLoading(false);
                 history.push('/conta');
             })
             .catch(() => {
@@ -34,7 +40,13 @@ export default function AddIncome() {
 
     return (
         <IncomeContainer loading={loading}>
-            <h1>Nova entrada</h1>
+            <header>
+                <h1>Nova entrada</h1>
+                <Link to='/conta'>
+                    <IoChevronBackOutline className="icon"/>
+                </Link> 
+            </header>
+           
             <form onSubmit={addIncome}>
                 <CurrencyInput 
                     placeholder = "Valor"
@@ -42,12 +54,14 @@ export default function AddIncome() {
                     value={value}
                     decimalsLimit={2}
                     onValueChange={value => setValue(value)}
+                    required
                 />
                 <input 
                     type='text'
                     placeholder='Descrição'
                     value={description} 
                     onChange={e => setDescription(e.target.value)}
+                    required
                 />
                 <button type='submit'>
                     {loading 
@@ -64,15 +78,26 @@ const IncomeContainer = styled.div`
     margin-top: 35px;
     padding: 0 25px;
 
-    h1 {
-        font-size: 26px;
-        color: #FFFFFF;
-        font-family: 'Raleway', sans-serif;
-        margin-bottom: 40px;
-        text-align: start;
-        font-weight: 700;
+    header {
+        display: flex;
+        justify-content: space-between;
+
+        h1 {
+            font-size: 26px;
+            color: #FFFFFF;
+            font-family: 'Raleway', sans-serif;
+            margin-bottom: 40px;
+            text-align: start;
+            font-weight: 700;
+        }
+
+        .icon {
+            color: #FFFFFF;
+            font-size: 26px;
+            cursor: pointer;
+        }
     }
-    
+
     input {
         display: block;
         width: 100%;

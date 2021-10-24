@@ -1,37 +1,51 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { AiOutlinePlusCircle, AiOutlineMinusCircle } from 'react-icons/ai'
 import { RiLogoutBoxRLine } from 'react-icons/ri';
 import { getEntries } from '../../services/API';
+import Entry from "./components/Entry.js";
 
 export default function Account() {
-    const [name, setName] = useState("");
     const [entries, setEntries] = useState([]);
+    const [total, setTotal] = useState("");
+    const history = useHistory();
+
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    const logout = () => {
+        localStorage.removeItem("user");
+        history.push('/');
+    }
 
     useEffect(() => {
-        getEntries()
-            .then(res => {
-                setEntries(res.data);
-            });
+        if(user) {
+            getEntries({token: user.token})
+                .then(res => {
+                    console.log(res.data)
+                    setEntries(res.data.entries);
+                    setTotal(res.data.total);
+                });
+        } else {
+            history.push("/");
+        }
     }, []);
 
     return (
         <AccountContainer>
             <header> 
-                <h1>Olá, {name}</h1>
-                <RiLogoutBoxRLine className="logout-icon"/>
+                <h1>Olá, {user?.name}</h1>
+                <RiLogoutBoxRLine className="logout-icon" onClick={logout}/>
             </header>   
-            <EntriesContainer>
-                {entries.length === 0 
+            <EntriesContainer isNegative={total?.includes('-')}>
+                {entries.length !== 0 
                     ? <>
                         <ul>
-                            {entries.map(entry => <li><spam className="date">{entry.date}</spam>{entry.description}<spam className="price">{entry.price}</spam></li>)}
-                            <li><spam className="date">30/11</spam>Almoço mãe<spam className="price">39,90</spam></li>
+                            {entries.map(entry => <Entry date={entry.date} description={entry.description} value={entry.value} />)}
                         </ul>
                         <p>
                             SALDO
-                            <spam className="price">4445</spam>
+                            <span className="total">{total.replace('R$ ', '').replace('-',' ')}</span>
                         </p>
                     </>
                     : <h2>Não há registros de entrada ou saída</h2>
@@ -75,6 +89,7 @@ const AccountContainer = styled.div`
         .logout-icon {
             color: #FFFFFF;
             font-size: 25px;
+            cursor: pointer;
         }
     }
 `;
@@ -106,28 +121,6 @@ const EntriesContainer = styled.div`
         display: flex;
         flex-direction: column;
 
-        li {
-            width: 100%;
-            color: #000000;
-            font-size: 16px;
-            font-weight: 400;
-            margin-bottom: 18px;
-            position: relative;
-            text-align: start;
-
-            .date {
-                color: #C6C6C6;
-                padding-right: 8px;
-            }
-
-            .price {
-                position: absolute;
-                font-weight: 400;
-                right: 0;
-                top: 0;
-            }
-        }
-
         ::-webkit-scrollbar {
             width: 0px;
             background: transparent; 
@@ -143,10 +136,11 @@ const EntriesContainer = styled.div`
         text-align: start;
         font-size: 17px;
 
-        .price {
+        .total {
             position: absolute;
             font-weight: 400;
             right: 10px;
+            color: ${({isNegative}) => isNegative ? '#C70000' : '#03AC00'};
         }
     }
 `;

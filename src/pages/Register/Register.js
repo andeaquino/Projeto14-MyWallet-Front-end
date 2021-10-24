@@ -26,14 +26,16 @@ export default function Register() {
             password
         }
 
-        signUp(body)
-            .then(() => {
-                setLoading(false);
+        signUp({body})
+            .then((res) => {
+                
                 setName("");
                 setEmail("");
                 setPassword("");
                 setConfirmPass("");
-                history.push('/conta');
+                
+                setLoading(false);
+                history.push('/');
             })
             .catch(() => {
                 setLoading(false);

@@ -19,11 +19,14 @@ export default function Login() {
             password
         }
 
-        signIn(body)
-            .then(() => {
-                setLoading(false);
+        signIn({body})
+            .then((res) => {
+                const user = JSON.stringify(res.data);
+                localStorage.setItem('user', user);
+
                 setEmail("");
                 setPassword("");
+                setLoading(false);
                 history.push('/conta');
             })
             .catch(() => {
