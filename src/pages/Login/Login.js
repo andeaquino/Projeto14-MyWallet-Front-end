@@ -29,8 +29,14 @@ export default function Login() {
                 setLoading(false);
                 history.push('/conta');
             })
-            .catch(() => {
+            .catch((err) => {
                 setLoading(false);
+                if (err.response.status === 401) {
+                    alert("Usuário não encontrado. Email ou senha inválidos");
+                }
+                if (err.response.status === 400) {
+                    alert("Campos inválidos!");
+                }
             });
     }
 
@@ -43,12 +49,14 @@ export default function Login() {
                     placeholder = "E-mail"  
                     value={email}
                     onChange={e => setEmail(e.target.value)}
+                    required
                 />
                 <input 
                     type='password'
                     placeholder='Senha'
                     value={password}
                     onChange={e => setPassword(e.target.value)}
+                    required
                 />
                 <button type='submit'>
                     {loading 
