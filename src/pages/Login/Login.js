@@ -34,7 +34,7 @@ export default function Login() {
                 if (err.response.status === 401) {
                     alert("Usuário não encontrado. Email ou senha inválidos");
                 }
-                if (err.response.status === 400) {
+                if (err.response.status === 403) {
                     alert("Campos inválidos!");
                 }
             });

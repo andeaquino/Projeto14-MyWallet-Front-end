@@ -42,7 +42,7 @@ export default function Register() {
                 if (err.response.status === 409) {
                     alert("Email já está em uso!");
                 }
-                if (err.response.status === 400) {
+                if (err.response.status === 403) {
                     alert("Campos inválidos!");
                 }
             });
