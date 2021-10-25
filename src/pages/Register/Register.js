@@ -37,8 +37,14 @@ export default function Register() {
                 setLoading(false);
                 history.push('/');
             })
-            .catch(() => {
+            .catch((err) => {
                 setLoading(false);
+                if (err.response.status === 409) {
+                    alert("Email já está em uso!");
+                }
+                if (err.response.status === 400) {
+                    alert("Campos inválidos!");
+                }
             });
     }
 
@@ -51,24 +57,28 @@ export default function Register() {
                     placeholder='Nome'
                     value={name}
                     onChange={e => setName(e.target.value)}
+                    required
                 />
                 <input
                     type='email'
                     placeholder = "E-mail"  
                     value={email}
                     onChange={e => setEmail(e.target.value)}
+                    required
                 />
                 <input 
                     type='password'
                     placeholder='Senha'
                     value={password}
                     onChange={e => setPassword(e.target.value)}
+                    required
                 />
                 <input 
                     type='password'
                     placeholder='Confirme a senha'
                     value={confirmPass}
                     onChange={e => setConfirmPass(e.target.value)}
+                    required
                 />
                 <button type='submit'>
                     {loading 
