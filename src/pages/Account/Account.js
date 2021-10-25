@@ -14,8 +14,11 @@ export default function Account() {
     const user = JSON.parse(localStorage.getItem("user"));
 
     const logout = () => {
-        localStorage.removeItem("user");
-        history.push('/');
+        const confirmation = window.confirm("Tem certeza que deseja sair?");
+        if (confirmation) {
+            localStorage.removeItem("user");
+            history.push('/');
+        }
     }
 
     useEffect(() => {
