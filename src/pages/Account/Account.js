@@ -22,7 +22,6 @@ export default function Account() {
         if(user) {
             getEntries({token: user.token})
                 .then(res => {
-                    console.log(res.data)
                     setEntries(res.data.entries);
                     setTotal(res.data.total);
                 });

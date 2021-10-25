@@ -26,16 +26,21 @@ export default function AddExpense() {
             description
         }
 
-        addEntry({body, token})
-            .then(() => {
-                setValue("");
-                setDescription("");
-                setLoading(false);
-                history.push('/conta');
-            })
-            .catch(() => {
-                setLoading(false);
-            });
+        if(body.value === 0) {
+            alert("Digite um valor diferente de zero");
+            setLoading(false);
+        } else {
+            addEntry({body, token})
+                .then(() => {
+                    setValue("");
+                    setDescription("");
+                    setLoading(false);
+                    history.push('/conta');
+                })
+                .catch(() => {
+                    setLoading(false);
+                });
+        }
     }
 
     return (

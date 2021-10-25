@@ -26,7 +26,11 @@ export default function AddIncome() {
             description
         }
 
-        addEntry({body, token})
+        if(body.value === 0) {
+            alert("Digite um valor diferente de zero");
+            setLoading(false);
+        } else {
+            addEntry({body, token})
             .then(() => {
                 setValue("");
                 setDescription("");
@@ -36,6 +40,7 @@ export default function AddIncome() {
             .catch(() => {
                 setLoading(false);
             });
+        }
     }
 
     return (
