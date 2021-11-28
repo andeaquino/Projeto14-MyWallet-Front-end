@@ -36,6 +36,7 @@ export default function AddEntry() {
           history.push("/conta");
         })
         .catch(() => {
+          alert("Não foi possível adicionar a entrada");
           setLoading(false);
         });
     }
