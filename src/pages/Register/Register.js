@@ -1,23 +1,31 @@
 import { useState } from "react";
 import styled from "styled-components";
 import { Link, useHistory } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import { signUp } from "../../services/API";
 import Loader from "react-loader-spinner";
 
 export default function Register() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPass, setConfirmPass] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const [passError, setPassError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
   const [loading, setLoading] = useState(false);
   const history = useHistory();
 
-  const register = (e) => {
-    e.preventDefault();
+  const onSubmit = (data) => {
+    const { name, email, password, confirmPass } = data;
+
     if (password !== confirmPass) {
-      alert("Campos de senha apresentam valores diferentes");
+      setPassError(true);
       return;
     }
+
+    setEmailError(false);
+    setPassError(false);
     setLoading(true);
 
     const body = {
@@ -28,21 +36,13 @@ export default function Register() {
 
     signUp({ body })
       .then((res) => {
-        setName("");
-        setEmail("");
-        setPassword("");
-        setConfirmPass("");
-
         setLoading(false);
         history.push("/");
       })
       .catch((err) => {
         setLoading(false);
         if (err.response.status === 409) {
-          alert("Email já está em uso!");
-        }
-        if (err.response.status === 403) {
-          alert("Campos inválidos!");
+          setEmailError(true);
         }
       });
   };
@@ -50,35 +50,41 @@ export default function Register() {
   return (
     <RegisterContainer loading={loading}>
       <h1>MyWallet</h1>
-      <form onSubmit={register}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <input
           type="text"
           placeholder="Nome"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
+          {...register("name", { required: "Campo não pode estar vazio" })}
         />
+        {errors?.name && <p>{errors.name?.message}</p>}
         <input
           type="email"
           placeholder="E-mail"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
+          {...register("email", { required: "Campo não pode estar vazio" })}
         />
+        {emailError ? <p>Email já está em uso</p> : ""}
+        {errors?.email && <p>{errors.email?.message}</p>}
         <input
           type="password"
           placeholder="Senha"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
+          {...register("password", {
+            required: "Campo não pode estar vazio",
+            minLength: {
+              value: 8,
+              message: "Senha deve ter pelo menos 8 caracteres",
+            },
+          })}
         />
+        {errors?.password && <p>{errors.password?.message}</p>}
         <input
           type="password"
           placeholder="Confirme a senha"
-          value={confirmPass}
-          onChange={(e) => setConfirmPass(e.target.value)}
-          required
+          {...register("confirmPass", {
+            required: "Campo não pode estar vazio",
+          })}
         />
+        {passError ? <p>Senhas não combinam</p> : ""}
+        {errors?.confirmPass && <p>{errors.confirmPass?.message}</p>}
         <button type="submit">
           {loading ? (
             <Loader type="ThreeDots" color="#FFFFFF" height={13} width={51} />
@@ -156,5 +162,11 @@ const RegisterContainer = styled.div`
     :hover {
       opacity: 0.8;
     }
+  }
+
+  p {
+    margin-top: -10px;
+    margin-bottom: 10px;
+    color: red;
   }
 `;
