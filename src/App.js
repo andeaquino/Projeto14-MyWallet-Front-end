@@ -3,28 +3,24 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import Account from "./pages/Account/Account";
-import AddIncome from "./pages/AddIncome/AddIncome";
-import AddExpense from "./pages/AddExpense/AddExpense";
+import AddEntry from "./pages/AddEntry/AddEntry";
 
 function App() {
   return (
     <BrowserRouter>
       <GlobalStyle />
       <Switch>
-        <Route exact path='/'>
+        <Route exact path="/">
           <Login />
         </Route>
-        <Route exact path='/cadastro'>
+        <Route exact path="/cadastro">
           <Register />
         </Route>
-        <Route exact path='/conta'>
+        <Route exact path="/conta">
           <Account />
         </Route>
-        <Route exact path='/nova-entrada'>
-          <AddIncome />
-        </Route>
-        <Route exact path='/nova-saida'>
-          <AddExpense />
+        <Route exact path="/:entryType">
+          <AddEntry />
         </Route>
       </Switch>
     </BrowserRouter>
