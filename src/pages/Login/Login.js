@@ -1,19 +1,26 @@
 import { useContext, useState } from "react";
 import styled from "styled-components";
 import { Link, useHistory } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import { signIn } from "../../services/API";
 import Loader from "react-loader-spinner";
 import { UserContext } from "../../contexts/UserContext";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const { setUserInfo } = useContext(UserContext);
   const history = useHistory();
 
-  const login = (e) => {
-    e.preventDefault();
+  const onSubmit = (data) => {
+    const { email, password } = data;
+
+    setError(false);
     setLoading(true);
 
     const body = {
@@ -27,40 +34,32 @@ export default function Login() {
         localStorage.setItem("user", user);
         setUserInfo(res.data);
 
-        setEmail("");
-        setPassword("");
         setLoading(false);
         history.push("/conta");
       })
       .catch((err) => {
+        setError(true);
         setLoading(false);
-        if (err.response.status === 401) {
-          alert("Usuário não encontrado. Email ou senha inválidos");
-        }
-        if (err.response.status === 403) {
-          alert("Campos inválidos!");
-        }
       });
   };
 
   return (
     <LoginContainer loading={loading}>
       <h1>MyWallet</h1>
-      <form onSubmit={login}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <input
           type="email"
           placeholder="E-mail"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
+          {...register("email", { required: "Campo não pode estar vazio" })}
         />
+        {errors?.email && <p>{errors.email?.message}</p>}
         <input
           type="password"
           placeholder="Senha"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
+          {...register("password", { required: "Campo não pode estar vazio" })}
         />
+        {errors?.password && <p>{errors.password?.message}</p>}
+        {error ? <p>Email ou senha inválidos</p> : ""}
         <button type="submit">
           {loading ? (
             <Loader type="ThreeDots" color="#FFFFFF" height={13} width={51} />
@@ -138,5 +137,11 @@ const LoginContainer = styled.div`
     :hover {
       opacity: 0.8;
     }
+  }
+
+  p {
+    margin-top: -10px;
+    margin-bottom: 10px;
+    color: red;
   }
 `;
