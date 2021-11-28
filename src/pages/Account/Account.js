@@ -1,41 +1,44 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link, useHistory } from "react-router-dom";
 import { AiOutlinePlusCircle, AiOutlineMinusCircle } from "react-icons/ai";
 import { RiLogoutBoxRLine } from "react-icons/ri";
 import { getEntries } from "../../services/API";
 import Entry from "./components/Entry.js";
+import { UserContext } from "../../contexts/UserContext";
 
 export default function Account() {
   const [entries, setEntries] = useState([]);
   const [total, setTotal] = useState("");
+  const { userInfo, setUserInfo } = useContext(UserContext);
   const history = useHistory();
-
-  const user = JSON.parse(localStorage.getItem("user"));
 
   const logout = () => {
     const confirmation = window.confirm("Tem certeza que deseja sair?");
     if (confirmation) {
       localStorage.removeItem("user");
+      setUserInfo(null);
       history.push("/");
     }
   };
 
-  useEffect(() => {
-    if (user) {
-      getEntries({ token: user.token }).then((res) => {
+  const loadEntries = () => {
+    getEntries({ token: userInfo.token })
+      .then((res) => {
         setEntries(res.data.entries);
         setTotal(res.data.total);
+      })
+      .catch((err) => {
+        alert("Não foi possível carregar as entradas");
       });
-    } else {
-      history.push("/");
-    }
-  }, []);
+  };
+
+  useEffect(loadEntries, []);
 
   return (
     <AccountContainer>
       <header>
-        <h1>Olá, {user?.name}</h1>
+        <h1>Olá, {userInfo.name}</h1>
         <RiLogoutBoxRLine className="logout-icon" onClick={logout} />
       </header>
       <EntriesContainer isNegative={total?.includes("-")}>

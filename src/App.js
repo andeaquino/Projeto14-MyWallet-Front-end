@@ -1,5 +1,5 @@
 import GlobalStyle from "./shared/GlobalStyle";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import { useState } from "react";
 import { UserContext } from "./contexts/UserContext";
 import Login from "./pages/Login/Login";
@@ -18,16 +18,16 @@ function App() {
         <GlobalStyle />
         <Switch>
           <Route exact path="/">
-            <Login />
+            {userInfo ? <Redirect to="/conta" /> : <Login />}
           </Route>
           <Route exact path="/cadastro">
-            <Register />
+            {userInfo ? <Redirect to="/conta" /> : <Register />}
           </Route>
           <Route exact path="/conta">
-            <Account />
+            {userInfo ? <Account /> : <Redirect to="/" />}
           </Route>
           <Route exact path="/:entryType">
-            <AddEntry />
+            {userInfo ? <AddEntry /> : <Redirect to="/" />}
           </Route>
         </Switch>
       </UserContext.Provider>
