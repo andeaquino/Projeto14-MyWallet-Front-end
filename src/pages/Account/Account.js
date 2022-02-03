@@ -1,17 +1,21 @@
 import { useContext, useEffect, useState } from "react";
-import styled from "styled-components";
 import { Link, useHistory } from "react-router-dom";
 import { AiOutlinePlusCircle, AiOutlineMinusCircle } from "react-icons/ai";
 import { RiLogoutBoxRLine } from "react-icons/ri";
-import { getEntries } from "../../services/API";
+import styled from "styled-components";
+
 import Entry from "./components/Entry.js";
-import { UserContext } from "../../contexts/UserContext";
+
+import UserContext from "../../contexts/UserContext";
+
+import useApi from "../../hooks/useApi";
 
 export default function Account() {
   const [entries, setEntries] = useState([]);
   const [total, setTotal] = useState("");
   const { userInfo, setUserInfo } = useContext(UserContext);
   const history = useHistory();
+  const api = useApi();
 
   const logout = () => {
     const confirmation = window.confirm("Tem certeza que deseja sair?");
@@ -23,8 +27,9 @@ export default function Account() {
   };
 
   const loadEntries = () => {
-    getEntries({ token: userInfo.token })
+    api.entry.getEntries()
       .then((res) => {
+        console.log(res.data)
         setEntries(res.data.entries);
         setTotal(res.data.total);
       })

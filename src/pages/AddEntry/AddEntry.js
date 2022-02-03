@@ -1,19 +1,19 @@
-import { useContext, useState } from "react";
-import styled from "styled-components";
+import { useState } from "react";
 import { useHistory, Link, useParams } from "react-router-dom";
-import { addEntry } from "../../services/API";
+import { IoChevronBackOutline } from "react-icons/io5";
+import styled from "styled-components";
 import Loader from "react-loader-spinner";
 import CurrencyInput from "react-currency-input-field";
-import { IoChevronBackOutline } from "react-icons/io5";
-import { UserContext } from "../../contexts/UserContext";
+
+import useApi from "../../hooks/useApi";
 
 export default function AddEntry() {
   const [value, setValue] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const { entryType } = useParams();
-  const { userInfo } = useContext(UserContext);
   const history = useHistory();
+  const api = useApi();
 
   const submitEntry = (e) => {
     e.preventDefault();
@@ -28,7 +28,7 @@ export default function AddEntry() {
       alert("Digite um valor diferente de zero");
       setLoading(false);
     } else {
-      addEntry({ body, token: userInfo.token })
+      api.entry.addEntry(body)
         .then(() => {
           setValue("");
           setDescription("");
