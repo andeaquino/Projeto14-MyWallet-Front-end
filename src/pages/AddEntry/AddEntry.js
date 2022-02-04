@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useHistory, Link, useParams } from "react-router-dom";
 import { IoChevronBackOutline } from "react-icons/io5";
 import styled from "styled-components";
@@ -6,10 +6,13 @@ import Loader from "react-loader-spinner";
 import CurrencyInput from "react-currency-input-field";
 
 import useApi from "../../hooks/useApi";
+import Select from "./components/Select";
 
 export default function AddEntry() {
   const [value, setValue] = useState("");
   const [description, setDescription] = useState("");
+  const [category, setCategory] = useState(null);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const { entryType } = useParams();
   const history = useHistory();
@@ -22,6 +25,7 @@ export default function AddEntry() {
     const body = {
       value: entryType === "nova-saida" ? -Number(value) : Number(value),
       description,
+      category: category.name
     };
 
     if (body.value === 0) {
@@ -41,6 +45,19 @@ export default function AddEntry() {
         });
     }
   };
+
+  const loadCategories = () => {
+    api.category
+      .getCategories()
+      .then((res) => {
+        setCategories(res.data);
+      })
+      .catch((err) => {
+        alert("Não foi possível carregar as entradas");
+      });
+  }
+
+  useEffect(loadCategories, [])
 
   return (
     <EntryContainer loading={loading}>
@@ -67,6 +84,16 @@ export default function AddEntry() {
           onChange={(e) => setDescription(e.target.value)}
           required
         />
+        {entryType === "nova-saida" ? (
+          <Select
+            selectedOption={category}
+            setSelectedOption={setCategory}
+            options={categories}
+            label={"Escolha uma categoria"}
+          />
+        ) : (
+          ""
+        )}
         <button type="submit">
           {loading ? (
             <Loader type="ThreeDots" color="#FFFFFF" height={13} width={51} />
@@ -105,7 +132,8 @@ const EntryContainer = styled.div`
     }
   }
 
-  input {
+  input,
+  select {
     display: block;
     width: 100%;
     height: 58px;

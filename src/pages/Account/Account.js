@@ -29,7 +29,6 @@ export default function Account() {
   const loadEntries = () => {
     api.entry.getEntries()
       .then((res) => {
-        console.log(res.data)
         setEntries(res.data.entries);
         setTotal(res.data.total);
       })
