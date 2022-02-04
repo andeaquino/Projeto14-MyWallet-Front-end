@@ -136,7 +136,7 @@ const RegisterContainer = styled.div`
     width: 100%;
     height: 46px;
     margin: 0 auto;
-    background-color: #a32bd6;
+    background-color: #8c97ea;
     border-radius: 5px;
     color: #ffffff;
     font-size: 20px;

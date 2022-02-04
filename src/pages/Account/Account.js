@@ -184,7 +184,7 @@ const AddEntryContainer = styled.div`
     align-items: center;
     height: 100%;
     width: 100%;
-    background-color: #a32bd6;
+    background-color: #8c97ea;
     border-radius: 5px;
     color: #ffffff;
     padding: 8px;
