@@ -1,6 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
-import { AiOutlinePlusCircle, AiOutlineMinusCircle } from "react-icons/ai";
+import {
+  AiOutlinePlusCircle,
+  AiOutlineMinusCircle,
+  AiOutlinePieChart,
+} from "react-icons/ai";
 import { RiLogoutBoxRLine } from "react-icons/ri";
 import styled from "styled-components";
 
@@ -69,13 +73,17 @@ export default function Account() {
         )}
       </EntriesContainer>
       <AddEntryContainer>
-        <Link to="/nova-entrada">
+        <Link to="adicionar/entrada">
           <AiOutlinePlusCircle className="icon" />
           <p>Nova entrada</p>
         </Link>
-        <Link to="/nova-saida">
+        <Link to="adicionar/saida">
           <AiOutlineMinusCircle className="icon" />
           <p>Nova saída</p>
+        </Link>
+        <Link to="/estatisticas">
+          <AiOutlinePieChart className="icon" />
+          <p>Estatísticas</p>
         </Link>
       </AddEntryContainer>
     </AccountContainer>
@@ -161,15 +169,21 @@ const EntriesContainer = styled.div`
 `;
 
 const AddEntryContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
+  height: 250px;
+  width: calc(100% - 10px);
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 50% 50%;
+  column-gap: 10px;
+  row-gap: 10px;
 
   a {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    height: 114px;
-    width: 48%;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+    width: 100%;
     background-color: #a32bd6;
     border-radius: 5px;
     color: #ffffff;
@@ -180,6 +194,22 @@ const AddEntryContainer = styled.div`
 
     .icon {
       font-size: 25px;
+    }
+
+    :hover {
+      opacity: 0.8;
+    }
+  }
+
+  a:last-child {
+    grid-row-start: 1;
+    grid-row-end: 3;
+    grid-column-start: 2;
+    justify-content: center;
+
+    .icon {
+      font-size: 55px;
+      margin-bottom: 10px;
     }
   }
 `;

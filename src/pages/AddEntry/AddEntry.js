@@ -23,9 +23,9 @@ export default function AddEntry() {
     setLoading(true);
 
     const body = {
-      value: entryType === "nova-saida" ? -Number(value) : Number(value),
+      value: entryType === "saida" ? -Number(value) : Number(value),
       description,
-      category: category.name
+      category: category?.name
     };
 
     if (body.value === 0) {
@@ -62,7 +62,7 @@ export default function AddEntry() {
   return (
     <EntryContainer loading={loading}>
       <header>
-        <h1>{entryType === "nova-saida" ? "Nova saída" : "Nova entrada"}</h1>
+        <h1>{entryType === "saida" ? "Nova saída" : "Nova entrada"}</h1>
         <Link to="/conta">
           <IoChevronBackOutline className="icon" />
         </Link>
@@ -84,7 +84,7 @@ export default function AddEntry() {
           onChange={(e) => setDescription(e.target.value)}
           required
         />
-        {entryType === "nova-saida" ? (
+        {entryType === "saida" ? (
           <Select
             selectedOption={category}
             setSelectedOption={setCategory}
@@ -97,7 +97,7 @@ export default function AddEntry() {
         <button type="submit">
           {loading ? (
             <Loader type="ThreeDots" color="#FFFFFF" height={13} width={51} />
-          ) : entryType === "nova-saida" ? (
+          ) : entryType === "saida" ? (
             "Salvar saída"
           ) : (
             "Salvar entrada"

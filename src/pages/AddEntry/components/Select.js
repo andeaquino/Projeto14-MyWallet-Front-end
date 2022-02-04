@@ -82,7 +82,7 @@ const OptionsContainer = styled.div`
   max-height: 200px;
   overflow-y: scroll;
   transition: all 0.4s;
-  transform: ${({isOpen}) => (isOpen ? "scaleY(1)" : "scaleY(0)")};
+  transform: ${({ isOpen }) => (isOpen ? "scaleY(1)" : "scaleY(0)")};
   transform-origin: top;
   height: auto;
   border-radius: 5px;

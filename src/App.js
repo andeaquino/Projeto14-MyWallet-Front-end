@@ -6,6 +6,7 @@ import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import Account from "./pages/Account/Account";
 import AddEntry from "./pages/AddEntry/AddEntry";
+import Stats from "./pages/Stats/Stats";
 
 function App() {
   const [userInfo, setUserInfo] = useState(
@@ -26,8 +27,11 @@ function App() {
           <Route exact path="/conta">
             {userInfo ? <Account /> : <Redirect to="/" />}
           </Route>
-          <Route exact path="/:entryType">
+          <Route exact path="/adicionar/:entryType">
             {userInfo ? <AddEntry /> : <Redirect to="/" />}
+          </Route>
+          <Route exact path="/estatisticas">
+            {userInfo ? <Stats /> : <Redirect to="/" />}
           </Route>
         </Switch>
       </UserContext.Provider>

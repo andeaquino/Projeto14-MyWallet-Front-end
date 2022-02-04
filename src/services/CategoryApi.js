@@ -9,4 +9,12 @@ export default class CategoryApi extends AuthenticatedApi {
       },
     });
   }
+
+  getCategoriesSum() {
+    return api.get("/category/entries", {
+      headers: {
+        ...this.getAuthorizationHeader(),
+      },
+    });
+  }
 }
