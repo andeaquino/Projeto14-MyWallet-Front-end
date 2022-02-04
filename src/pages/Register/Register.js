@@ -1,9 +1,10 @@
 import { useState } from "react";
-import styled from "styled-components";
 import { Link, useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { signUp } from "../../services/API";
+import styled from "styled-components";
 import Loader from "react-loader-spinner";
+
+import useApi from "../../hooks/useApi";
 
 export default function Register() {
   const {
@@ -15,6 +16,7 @@ export default function Register() {
   const [emailError, setEmailError] = useState(false);
   const [loading, setLoading] = useState(false);
   const history = useHistory();
+  const api = useApi();
 
   const onSubmit = (data) => {
     const { name, email, password, confirmPass } = data;
@@ -34,7 +36,7 @@ export default function Register() {
       password,
     };
 
-    signUp({ body })
+    api.user.signUp(body)
       .then((res) => {
         setLoading(false);
         history.push("/");
@@ -134,7 +136,7 @@ const RegisterContainer = styled.div`
     width: 100%;
     height: 46px;
     margin: 0 auto;
-    background-color: #a32bd6;
+    background-color: #8c97ea;
     border-radius: 5px;
     color: #ffffff;
     font-size: 20px;

@@ -1,34 +1,38 @@
-import { useContext, useState } from "react";
-import styled from "styled-components";
+import { useEffect, useState } from "react";
 import { useHistory, Link, useParams } from "react-router-dom";
-import { addEntry } from "../../services/API";
+import { IoChevronBackOutline } from "react-icons/io5";
+import styled from "styled-components";
 import Loader from "react-loader-spinner";
 import CurrencyInput from "react-currency-input-field";
-import { IoChevronBackOutline } from "react-icons/io5";
-import { UserContext } from "../../contexts/UserContext";
+
+import useApi from "../../hooks/useApi";
+import Select from "./components/Select";
 
 export default function AddEntry() {
   const [value, setValue] = useState("");
   const [description, setDescription] = useState("");
+  const [category, setCategory] = useState(null);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const { entryType } = useParams();
-  const { userInfo } = useContext(UserContext);
   const history = useHistory();
+  const api = useApi();
 
   const submitEntry = (e) => {
     e.preventDefault();
     setLoading(true);
 
     const body = {
-      value: entryType === "nova-saida" ? -Number(value) : Number(value),
+      value: entryType === "saida" ? -Number(value) : Number(value),
       description,
+      category: category?.name
     };
 
     if (body.value === 0) {
       alert("Digite um valor diferente de zero");
       setLoading(false);
     } else {
-      addEntry({ body, token: userInfo.token })
+      api.entry.addEntry(body)
         .then(() => {
           setValue("");
           setDescription("");
@@ -42,10 +46,23 @@ export default function AddEntry() {
     }
   };
 
+  const loadCategories = () => {
+    api.category
+      .getCategories()
+      .then((res) => {
+        setCategories(res.data);
+      })
+      .catch((err) => {
+        alert("Não foi possível carregar as entradas");
+      });
+  }
+
+  useEffect(loadCategories, [])
+
   return (
     <EntryContainer loading={loading}>
       <header>
-        <h1>{entryType === "nova-saida" ? "Nova saída" : "Nova entrada"}</h1>
+        <h1>{entryType === "saida" ? "Nova saída" : "Nova entrada"}</h1>
         <Link to="/conta">
           <IoChevronBackOutline className="icon" />
         </Link>
@@ -67,10 +84,20 @@ export default function AddEntry() {
           onChange={(e) => setDescription(e.target.value)}
           required
         />
+        {entryType === "saida" ? (
+          <Select
+            selectedOption={category}
+            setSelectedOption={setCategory}
+            options={categories}
+            label={"Escolha uma categoria"}
+          />
+        ) : (
+          ""
+        )}
         <button type="submit">
           {loading ? (
             <Loader type="ThreeDots" color="#FFFFFF" height={13} width={51} />
-          ) : entryType === "nova-saida" ? (
+          ) : entryType === "saida" ? (
             "Salvar saída"
           ) : (
             "Salvar entrada"
@@ -105,7 +132,8 @@ const EntryContainer = styled.div`
     }
   }
 
-  input {
+  input,
+  select {
     display: block;
     width: 100%;
     height: 58px;
@@ -128,7 +156,7 @@ const EntryContainer = styled.div`
     width: 100%;
     height: 46px;
     margin: 0 auto;
-    background-color: #a32bd6;
+    background-color: #8c97ea;
     border-radius: 5px;
     color: #ffffff;
     font-size: 20px;

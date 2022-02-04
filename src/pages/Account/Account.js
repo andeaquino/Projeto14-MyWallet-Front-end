@@ -1,17 +1,25 @@
 import { useContext, useEffect, useState } from "react";
-import styled from "styled-components";
 import { Link, useHistory } from "react-router-dom";
-import { AiOutlinePlusCircle, AiOutlineMinusCircle } from "react-icons/ai";
+import {
+  AiOutlinePlusCircle,
+  AiOutlineMinusCircle,
+  AiOutlinePieChart,
+} from "react-icons/ai";
 import { RiLogoutBoxRLine } from "react-icons/ri";
-import { getEntries } from "../../services/API";
+import styled from "styled-components";
+
 import Entry from "./components/Entry.js";
-import { UserContext } from "../../contexts/UserContext";
+
+import UserContext from "../../contexts/UserContext";
+
+import useApi from "../../hooks/useApi";
 
 export default function Account() {
   const [entries, setEntries] = useState([]);
   const [total, setTotal] = useState("");
   const { userInfo, setUserInfo } = useContext(UserContext);
   const history = useHistory();
+  const api = useApi();
 
   const logout = () => {
     const confirmation = window.confirm("Tem certeza que deseja sair?");
@@ -23,7 +31,7 @@ export default function Account() {
   };
 
   const loadEntries = () => {
-    getEntries({ token: userInfo.token })
+    api.entry.getEntries()
       .then((res) => {
         setEntries(res.data.entries);
         setTotal(res.data.total);
@@ -65,13 +73,17 @@ export default function Account() {
         )}
       </EntriesContainer>
       <AddEntryContainer>
-        <Link to="/nova-entrada">
+        <Link to="adicionar/entrada">
           <AiOutlinePlusCircle className="icon" />
           <p>Nova entrada</p>
         </Link>
-        <Link to="/nova-saida">
+        <Link to="adicionar/saida">
           <AiOutlineMinusCircle className="icon" />
           <p>Nova saída</p>
+        </Link>
+        <Link to="/estatisticas">
+          <AiOutlinePieChart className="icon" />
+          <p>Estatísticas</p>
         </Link>
       </AddEntryContainer>
     </AccountContainer>
@@ -157,16 +169,22 @@ const EntriesContainer = styled.div`
 `;
 
 const AddEntryContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
+  height: 250px;
+  width: calc(100% - 10px);
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 50% 50%;
+  column-gap: 10px;
+  row-gap: 10px;
 
   a {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    height: 114px;
-    width: 48%;
-    background-color: #a32bd6;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    background-color: #8c97ea;
     border-radius: 5px;
     color: #ffffff;
     padding: 8px;
@@ -176,6 +194,22 @@ const AddEntryContainer = styled.div`
 
     .icon {
       font-size: 25px;
+    }
+
+    :hover {
+      opacity: 0.8;
+    }
+  }
+
+  a:last-child {
+    grid-row-start: 1;
+    grid-row-end: 3;
+    grid-column-start: 2;
+    justify-content: center;
+
+    .icon {
+      font-size: 55px;
+      margin-bottom: 10px;
     }
   }
 `;

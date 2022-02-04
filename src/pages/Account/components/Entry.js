@@ -1,7 +1,9 @@
 import styled from "styled-components";
 import dayjs from "dayjs";
 
-export default function Entry({date, description, value}) {
+export default function Entry({ date, description, value }) {
+    value = String(Number(value).toFixed(2));
+
     return (
         <EntryContainer>
             <Date>{dayjs(date).format('DD/MM')}</Date>

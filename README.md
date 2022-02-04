@@ -2,7 +2,9 @@
 
 An easy to use financial manager. Track your revenues and expenses to learn how you spend your money and know all the time how much you have.
 
-<img src="src/assets/myWallet-example.jpg" />
+<p align="center" >
+  <img src="src/assets/myWallet.gif" />
+</p>
 
 Try it out now at https://my-wallet-xi.vercel.app/
 
@@ -15,6 +17,7 @@ This is an web application with which lots of people can manage their own expens
 - List all financial events for a user
 - Add expense
 - Add revenue
+- Show pie chart for expenses
 
 By using this app any user can learn how they've been using their money and always keep track of your balance.
 
@@ -41,19 +44,21 @@ The following tools and frameworks were used in the construction of the project:
 npm i
 ```
 
-3. Run the app
+3. Configure the .env file using the .env.example file
+
+4. Run the app
 
 ```bash
 npm start
 ```
 
-4. You can optionally build the project running
+5. You can optionally build the project running
 
 ```bash
 npm run build
 ```
 
-5. Finally access http://localhost:3000 on your favorite browser
+6. Finally access http://localhost:3000 on your favorite browser
 
 ## Back-end
 
