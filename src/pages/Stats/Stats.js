@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, Tooltip } from "recharts";
 import { Link } from "react-router-dom";
 import { IoChevronBackOutline } from "react-icons/io5";
-import useApi from "../../hooks/useApi";
+import { toast } from "react-toastify";
 import styled from "styled-components";
+
+import useApi from "../../hooks/useApi";
 
 export default function Stats() {
   const [data, setData] = useState(null);
@@ -20,7 +22,7 @@ export default function Stats() {
         setData(pieData);
       })
       .catch((err) => {
-        alert("Não foi possível carregar as entradas");
+        toast("Não foi possível conectar ao servidor!");
       });
   }
 

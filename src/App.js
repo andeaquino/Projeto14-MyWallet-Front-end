@@ -1,7 +1,9 @@
-import GlobalStyle from "./shared/GlobalStyle";
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import { useState } from "react";
+import { ToastContainer } from "react-toastify";
+
 import UserContext from "./contexts/UserContext";
+
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import Account from "./pages/Account/Account";
@@ -15,8 +17,8 @@ function App() {
 
   return (
     <BrowserRouter>
+      <ToastContainer />
       <UserContext.Provider value={{ userInfo, setUserInfo }}>
-        <GlobalStyle />
         <Switch>
           <Route exact path="/">
             {userInfo ? <Redirect to="/conta" /> : <Login />}

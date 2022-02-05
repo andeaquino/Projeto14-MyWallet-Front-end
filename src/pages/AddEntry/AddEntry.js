@@ -7,6 +7,7 @@ import CurrencyInput from "react-currency-input-field";
 
 import useApi from "../../hooks/useApi";
 import Select from "./components/Select";
+import { toast } from "react-toastify";
 
 export default function AddEntry() {
   const [value, setValue] = useState("");
@@ -20,6 +21,12 @@ export default function AddEntry() {
 
   const submitEntry = (e) => {
     e.preventDefault();
+    
+    if (entryType === "saida" && !category) {
+      toast("Escolha uma categoria!");
+      return;
+    }
+
     setLoading(true);
 
     const body = {
@@ -29,7 +36,7 @@ export default function AddEntry() {
     };
 
     if (body.value === 0) {
-      alert("Digite um valor diferente de zero");
+      toast("Digite um valor diferente de zero");
       setLoading(false);
     } else {
       api.entry.addEntry(body)
@@ -38,9 +45,10 @@ export default function AddEntry() {
           setDescription("");
           setLoading(false);
           history.push("/conta");
+          toast("Entrada salva!")
         })
         .catch(() => {
-          alert("Não foi possível adicionar a entrada");
+          toast("Não foi possível adicionar a entrada");
           setLoading(false);
         });
     }
@@ -53,7 +61,7 @@ export default function AddEntry() {
         setCategories(res.data);
       })
       .catch((err) => {
-        alert("Não foi possível carregar as entradas");
+        toast("Não foi possível carregar as categorias");
       });
   }
 

@@ -43,7 +43,7 @@ export default function Register() {
       })
       .catch((err) => {
         setLoading(false);
-        if (err.response.status === 409) {
+        if (err?.response.status === 409) {
           setEmailError(true);
         }
       });
