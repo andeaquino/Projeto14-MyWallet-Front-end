@@ -1,5 +1,5 @@
 import { IoArrowDown } from "react-icons/io5";
-import { useState } from "react/cjs/react.development";
+import { useState } from "react";
 import styled from "styled-components";
 
 const Select = ({ selectedOption, setSelectedOption, options, label}) => {

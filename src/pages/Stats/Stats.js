@@ -12,13 +12,11 @@ export default function Stats() {
   const loadData = () => {
     api.category.getCategoriesSum()
       .then((res) => {
-        console.log(res.data);
         const pieData = res.data.map((category) => { return {
           name: category.categories_name,
           value: Number(category.sum.replace("-", "")),
           color: category.categories_color
         }; });
-        console.log(pieData)
         setData(pieData);
       })
       .catch((err) => {
