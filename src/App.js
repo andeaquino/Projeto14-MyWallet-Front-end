@@ -1,5 +1,6 @@
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import { useState } from "react";
+import { ToastContainer } from "react-toastify";
 
 import UserContext from "./contexts/UserContext";
 
@@ -16,6 +17,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <ToastContainer />
       <UserContext.Provider value={{ userInfo, setUserInfo }}>
         <Switch>
           <Route exact path="/">

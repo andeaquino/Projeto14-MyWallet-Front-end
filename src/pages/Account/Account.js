@@ -6,6 +6,7 @@ import {
   AiOutlinePieChart,
 } from "react-icons/ai";
 import { RiLogoutBoxRLine } from "react-icons/ri";
+import { toast } from "react-toastify";
 import styled from "styled-components";
 
 import Entry from "./components/Entry.js";
@@ -37,7 +38,7 @@ export default function Account() {
         setTotal(res.data.total);
       })
       .catch((err) => {
-        alert("Não foi possível carregar as entradas");
+        toast("Não foi possível carregar as entradas");
       });
   };
 
