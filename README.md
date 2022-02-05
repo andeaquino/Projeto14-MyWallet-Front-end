@@ -62,4 +62,4 @@ npm run build
 
 ## Back-end
 
-The back-end of this application was deployed on https://mywallet-b.herokuapp.com and can be seen at https://github.com/andeaquino/myWallet-back
+The back-end of this application was deployed on https://mywalletback.herokuapp.com and can be seen at https://github.com/andeaquino/myWallet-back
