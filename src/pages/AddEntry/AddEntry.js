@@ -22,7 +22,7 @@ export default function AddEntry() {
   const submitEntry = (e) => {
     e.preventDefault();
     
-    if (entryType === "saida" && !category) {
+    if (entryType === "despesa" && !category) {
       toast.error("Escolha uma categoria!");
       return;
     }
@@ -30,7 +30,7 @@ export default function AddEntry() {
     setLoading(true);
 
     const body = {
-      value: entryType === "saida" ? -Number(value) : Number(value),
+      value: entryType === "despesa" ? -Number(value) : Number(value),
       description,
       category: category?.name
     };
@@ -78,7 +78,7 @@ export default function AddEntry() {
   return (
     <EntryContainer loading={loading}>
       <header>
-        <h1>{entryType === "saida" ? "Nova saída" : "Nova entrada"}</h1>
+        <h1>{entryType === "saida" ? "Nova despesa" : "Nova receita"}</h1>
         <Link to="/conta">
           <IoChevronBackOutline className="icon" />
         </Link>
@@ -100,7 +100,7 @@ export default function AddEntry() {
           onChange={(e) => setDescription(e.target.value)}
           required
         />
-        {entryType === "saida" ? (
+        {entryType === "despesa" ? (
           <Select
             selectedOption={category}
             setSelectedOption={setCategory}
@@ -113,10 +113,10 @@ export default function AddEntry() {
         <button type="submit">
           {loading ? (
             <Loader type="ThreeDots" color="#FFFFFF" height={13} width={51} />
-          ) : entryType === "saida" ? (
-            "Salvar saída"
+          ) : entryType === "despesa" ? (
+            "Salvar despesa"
           ) : (
-            "Salvar entrada"
+            "Salvar receita"
           )}
         </button>
       </form>

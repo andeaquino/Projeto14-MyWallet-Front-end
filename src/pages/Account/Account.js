@@ -79,17 +79,17 @@ export default function Account() {
             </p>
           </>
         ) : (
-          <h2>Não há registros de entrada ou saída</h2>
+          <h2>Não há registros de receita ou despesa</h2>
         )}
       </EntriesContainer>
       <AddEntryContainer>
-        <Link to="adicionar/entrada">
+        <Link to="adicionar/receita">
           <AiOutlinePlusCircle className="icon" />
-          <p>Nova entrada</p>
+          <p>Nova receita</p>
         </Link>
-        <Link to="adicionar/saida">
+        <Link to="adicionar/despesa">
           <AiOutlineMinusCircle className="icon" />
-          <p>Nova saída</p>
+          <p>Nova despesa</p>
         </Link>
         <Link to="/estatisticas">
           <AiOutlinePieChart className="icon" />
