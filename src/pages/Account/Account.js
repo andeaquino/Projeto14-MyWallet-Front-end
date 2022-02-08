@@ -7,6 +7,7 @@ import {
 } from "react-icons/ai";
 import { RiLogoutBoxRLine } from "react-icons/ri";
 import { toast } from "react-toastify";
+import Loader from "react-loader-spinner";
 import styled from "styled-components";
 
 import Entry from "./components/Entry.js";
@@ -16,6 +17,7 @@ import useApi from "../../hooks/useApi";
 export default function Account() {
   const [entries, setEntries] = useState([]);
   const [total, setTotal] = useState("");
+  const [loading, setLoading] = useState(false);
   const { userInfo, setUserInfo } = useContext(UserContext);
   const history = useHistory();
   const api = useApi();
@@ -30,10 +32,12 @@ export default function Account() {
   };
 
   const loadEntries = () => {
+    setLoading(true);
     api.entry.getEntries()
       .then((res) => {
         setEntries(res.data.entries);
         setTotal(res.data.total);
+        setLoading(false);
       })
       .catch((err) => {
         if (err.response) {
@@ -41,6 +45,7 @@ export default function Account() {
         } else {
           toast.error("Não foi possível conectar ao servidor!");
         }
+        setLoading(false);
       });
   };
 
@@ -53,7 +58,9 @@ export default function Account() {
         <RiLogoutBoxRLine className="logout-icon" onClick={logout} />
       </header>
       <EntriesContainer isNegative={total?.includes("-")}>
-        {entries.length !== 0 ? (
+        {loading ? (
+          <LoaderStyled type="ThreeDots" color="#6D7CE4" height={23} width={81} />
+        ) : entries.length !== 0 ? (
           <>
             <ul>
               {entries.map((entry) => (
@@ -118,6 +125,10 @@ const AccountContainer = styled.div`
       cursor: pointer;
     }
   }
+`;
+
+const LoaderStyled = styled(Loader)`
+  text-align: center;
 `;
 
 const EntriesContainer = styled.div`
