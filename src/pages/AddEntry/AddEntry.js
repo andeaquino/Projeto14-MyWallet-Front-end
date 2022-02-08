@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useHistory, Link, useParams } from "react-router-dom";
 import { IoChevronBackOutline } from "react-icons/io5";
+import { toast } from "react-toastify";
 import styled from "styled-components";
 import Loader from "react-loader-spinner";
 import CurrencyInput from "react-currency-input-field";
 
 import useApi from "../../hooks/useApi";
 import Select from "./components/Select";
-import { toast } from "react-toastify";
 
 export default function AddEntry() {
   const [value, setValue] = useState("");
@@ -23,7 +23,7 @@ export default function AddEntry() {
     e.preventDefault();
     
     if (entryType === "saida" && !category) {
-      toast("Escolha uma categoria!");
+      toast.error("Escolha uma categoria!");
       return;
     }
 
@@ -36,7 +36,7 @@ export default function AddEntry() {
     };
 
     if (body.value === 0) {
-      toast("Digite um valor diferente de zero");
+      toast.error("Insira um valor diferente de zero");
       setLoading(false);
     } else {
       api.entry.addEntry(body)
@@ -47,8 +47,12 @@ export default function AddEntry() {
           history.push("/conta");
           toast("Entrada salva!")
         })
-        .catch(() => {
-          toast("Não foi possível adicionar a entrada");
+        .catch((err) => {
+          if (err.response) {
+            toast.error(err.response.data.message);
+          } else {
+            toast.error("Não foi possível conectar ao servidor!");
+          }
           setLoading(false);
         });
     }
@@ -61,7 +65,11 @@ export default function AddEntry() {
         setCategories(res.data);
       })
       .catch((err) => {
-        toast("Não foi possível carregar as categorias");
+        if (err.response) {
+          toast.error(err.response.data.message);
+        } else {
+          toast.error("Não foi possível conectar ao servidor!");
+        }
       });
   }
 

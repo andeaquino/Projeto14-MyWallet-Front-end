@@ -22,7 +22,11 @@ export default function Stats() {
         setData(pieData);
       })
       .catch((err) => {
-        toast("Não foi possível conectar ao servidor!");
+        if (err.response) {
+          toast.error(err.response.data.message);
+        } else {
+          toast.error("Não foi possível conectar ao servidor!");
+        }
       });
   }
 

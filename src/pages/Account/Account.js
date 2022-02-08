@@ -10,9 +10,7 @@ import { toast } from "react-toastify";
 import styled from "styled-components";
 
 import Entry from "./components/Entry.js";
-
 import UserContext from "../../contexts/UserContext";
-
 import useApi from "../../hooks/useApi";
 
 export default function Account() {
@@ -38,7 +36,11 @@ export default function Account() {
         setTotal(res.data.total);
       })
       .catch((err) => {
-        toast("Não foi possível carregar as entradas");
+        if (err.response) {
+          toast.error(err.response.data.message);
+        } else {
+          toast.error("Não foi possível conectar ao servidor!");
+        }
       });
   };
 
