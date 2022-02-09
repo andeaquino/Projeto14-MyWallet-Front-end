@@ -1,12 +1,10 @@
 import { useContext, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 import styled from "styled-components";
 import Loader from "react-loader-spinner";
 
 import UserContext from "../../contexts/UserContext";
-
 import useApi from "../../hooks/useApi";
 
 export default function Login() {

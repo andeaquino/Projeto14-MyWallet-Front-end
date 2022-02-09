@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useHistory, Link, useParams } from "react-router-dom";
 import { IoChevronBackOutline } from "react-icons/io5";
+import { toast } from "react-toastify";
 import styled from "styled-components";
 import Loader from "react-loader-spinner";
 import CurrencyInput from "react-currency-input-field";
 
 import useApi from "../../hooks/useApi";
 import Select from "./components/Select";
-import { toast } from "react-toastify";
 
 export default function AddEntry() {
   const [value, setValue] = useState("");
@@ -22,21 +22,21 @@ export default function AddEntry() {
   const submitEntry = (e) => {
     e.preventDefault();
     
-    if (entryType === "saida" && !category) {
-      toast("Escolha uma categoria!");
+    if (entryType === "despesa" && !category) {
+      toast.error("Escolha uma categoria!");
       return;
     }
 
     setLoading(true);
 
     const body = {
-      value: entryType === "saida" ? -Number(value) : Number(value),
+      value: entryType === "despesa" ? -Number(value) : Number(value),
       description,
       category: category?.name
     };
 
     if (body.value === 0) {
-      toast("Digite um valor diferente de zero");
+      toast.error("Insira um valor diferente de zero");
       setLoading(false);
     } else {
       api.entry.addEntry(body)
@@ -47,8 +47,12 @@ export default function AddEntry() {
           history.push("/conta");
           toast("Entrada salva!")
         })
-        .catch(() => {
-          toast("Não foi possível adicionar a entrada");
+        .catch((err) => {
+          if (err.response) {
+            toast.error(err.response.data.message);
+          } else {
+            toast.error("Não foi possível conectar ao servidor!");
+          }
           setLoading(false);
         });
     }
@@ -61,7 +65,11 @@ export default function AddEntry() {
         setCategories(res.data);
       })
       .catch((err) => {
-        toast("Não foi possível carregar as categorias");
+        if (err.response) {
+          toast.error(err.response.data.message);
+        } else {
+          toast.error("Não foi possível conectar ao servidor!");
+        }
       });
   }
 
@@ -70,7 +78,7 @@ export default function AddEntry() {
   return (
     <EntryContainer loading={loading}>
       <header>
-        <h1>{entryType === "saida" ? "Nova saída" : "Nova entrada"}</h1>
+        <h1>{entryType === "saida" ? "Nova despesa" : "Nova receita"}</h1>
         <Link to="/conta">
           <IoChevronBackOutline className="icon" />
         </Link>
@@ -92,7 +100,7 @@ export default function AddEntry() {
           onChange={(e) => setDescription(e.target.value)}
           required
         />
-        {entryType === "saida" ? (
+        {entryType === "despesa" ? (
           <Select
             selectedOption={category}
             setSelectedOption={setCategory}
@@ -105,10 +113,10 @@ export default function AddEntry() {
         <button type="submit">
           {loading ? (
             <Loader type="ThreeDots" color="#FFFFFF" height={13} width={51} />
-          ) : entryType === "saida" ? (
-            "Salvar saída"
+          ) : entryType === "despesa" ? (
+            "Salvar despesa"
           ) : (
-            "Salvar entrada"
+            "Salvar receita"
           )}
         </button>
       </form>

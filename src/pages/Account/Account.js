@@ -7,17 +7,17 @@ import {
 } from "react-icons/ai";
 import { RiLogoutBoxRLine } from "react-icons/ri";
 import { toast } from "react-toastify";
+import Loader from "react-loader-spinner";
 import styled from "styled-components";
 
 import Entry from "./components/Entry.js";
-
 import UserContext from "../../contexts/UserContext";
-
 import useApi from "../../hooks/useApi";
 
 export default function Account() {
   const [entries, setEntries] = useState([]);
   const [total, setTotal] = useState("");
+  const [loading, setLoading] = useState(false);
   const { userInfo, setUserInfo } = useContext(UserContext);
   const history = useHistory();
   const api = useApi();
@@ -32,13 +32,20 @@ export default function Account() {
   };
 
   const loadEntries = () => {
+    setLoading(true);
     api.entry.getEntries()
       .then((res) => {
         setEntries(res.data.entries);
         setTotal(res.data.total);
+        setLoading(false);
       })
       .catch((err) => {
-        toast("Não foi possível carregar as entradas");
+        if (err.response) {
+          toast.error(err.response.data.message);
+        } else {
+          toast.error("Não foi possível conectar ao servidor!");
+        }
+        setLoading(false);
       });
   };
 
@@ -51,7 +58,9 @@ export default function Account() {
         <RiLogoutBoxRLine className="logout-icon" onClick={logout} />
       </header>
       <EntriesContainer isNegative={total?.includes("-")}>
-        {entries.length !== 0 ? (
+        {loading ? (
+          <LoaderStyled type="ThreeDots" color="#6D7CE4" height={23} width={81} />
+        ) : entries.length !== 0 ? (
           <>
             <ul>
               {entries.map((entry) => (
@@ -70,17 +79,17 @@ export default function Account() {
             </p>
           </>
         ) : (
-          <h2>Não há registros de entrada ou saída</h2>
+          <h2>Não há registros de receita ou despesa</h2>
         )}
       </EntriesContainer>
       <AddEntryContainer>
-        <Link to="adicionar/entrada">
+        <Link to="adicionar/receita">
           <AiOutlinePlusCircle className="icon" />
-          <p>Nova entrada</p>
+          <p>Nova receita</p>
         </Link>
-        <Link to="adicionar/saida">
+        <Link to="adicionar/despesa">
           <AiOutlineMinusCircle className="icon" />
-          <p>Nova saída</p>
+          <p>Nova despesa</p>
         </Link>
         <Link to="/estatisticas">
           <AiOutlinePieChart className="icon" />
@@ -116,6 +125,10 @@ const AccountContainer = styled.div`
       cursor: pointer;
     }
   }
+`;
+
+const LoaderStyled = styled(Loader)`
+  text-align: center;
 `;
 
 const EntriesContainer = styled.div`
